@@ -1,0 +1,87 @@
+﻿@using Mantenimiento2DSII.Models
+@model List<Notas>
+@{
+    ViewData["Title"] = "Area de cursos";
+}
+
+@if(Model != null)
+{
+    try{
+        if(Model[0].Asignatura != "")
+        {
+            <h1>@ViewData["Title"]</h1>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Codigo Nota
+                        </th>
+                        <th>
+                            Codigo Asignatura
+                        </th>
+                        <th>
+                            Asignatura
+                        </th>
+                        <th>
+                            Semestre
+                        </th>
+                        <th>
+                            Parcial 1
+                        </th>
+                        <th>
+                            Parcial 2
+                        </th>
+                        <th>
+                            Nota Final
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var nota in Model)
+                    {
+                        <tr>
+                            <td>
+                                @nota.CodTNotas
+                            </td>
+                            <td>
+                                @nota.CodAsignatura
+                            </td>
+                            <td>
+                                @nota.Asignatura
+                            </td>
+                            <td>
+                                @nota.Semestre
+                            </td>
+                            <td>
+                                @nota.Parcial1
+                            </td>
+                            <td>
+                                @nota.Parcial2
+                            </td>
+                            <td>
+                                @nota.NotaFinal
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h1 align="center">
+                No puede acceder a esta area
+                </h1>
+        }
+    }
+    catch (Exception)
+    {
+        <h1 align="center">
+                No puede acceder a esta area
+                </h1>
+    }
+
+}else{
+    <h1 align="center">
+        Se requiere iniciar sesión
+    </h1>
+}

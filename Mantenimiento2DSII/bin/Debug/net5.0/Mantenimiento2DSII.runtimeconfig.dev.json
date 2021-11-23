@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Moon-\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Moon-\\.nuget\\packages"
+    ]
+  }
+}

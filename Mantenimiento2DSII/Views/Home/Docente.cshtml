@@ -1,0 +1,148 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<AlumnoNotas>
+@{
+    ViewData["Title"] = "Area del Docente";
+}
+@if(Model != null) {
+    try{
+        if(Model[0].Asignatura != ""){
+        <h1 align="center">@ViewData["Title"]</h1>
+        
+
+        <!-- formulario -->
+
+        @using(Html.BeginForm()){
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Codigo del alumno</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" name="codalumno" placeholder="Codigo">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Nota Parcial 1</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" name="nota1" placeholder="Parcial 1">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Nota Parcial 2</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" ame="nota2" placeholder="Parcial 2">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+          </div>
+        }
+
+        <!-- Fin formulario -->
+
+        var actualasign = Model[0].Asignatura;
+        int[] tabscount = new int[Model.Count];
+
+        var counter = 0;
+        var position = 0;
+        @foreach(var curso in Model)
+        {
+            if(curso.Asignatura == actualasign)
+            {
+                counter++;
+                tabscount[position] = counter;
+            }
+            else
+            {
+                actualasign = curso.Asignatura;
+                tabscount[position] = counter;
+                position++;
+                counter = 0;
+            }
+        
+        }
+        var filacounter = 0;
+        var cursocount = 0;
+        <h1 align="center">Asignaturas</h1>
+        @foreach(var pos in tabscount)
+        {
+            <h3>@Model[cursocount].Asignatura</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Codigo Carrera
+                        </th>
+                        <th>
+                            Codigo Alumno
+                        </th>
+                        <th>
+                            Nombres del Alumno
+                        </th>
+                        <th>
+                            Semestre
+                        </th>
+                        <th>
+                            Parcial 1
+                        </th>
+                        <th>
+                            Parcial 2
+                        </th>
+                        <th>
+                            Promedio Final
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(int row = 0; row < pos; row++)
+                {
+                    <tr>
+                        <td>
+                            @Model[filacounter].CodCarrera
+                        </td>
+                        <td>
+                            @Model[filacounter].CodAlumno
+                        </td>
+                        <td>
+                            @Model[filacounter].NombreAlumno
+                        </td>
+                        <td>
+                            @Model[filacounter].Semestre
+                        </td>
+                        <td>
+                            @Model[filacounter].Parcial1
+                        </td>
+                        <td>
+                            @Model[filacounter].Parcial2
+                        </td>
+                        <td>
+                            @Model[filacounter].NotaFinal
+                        </td>
+                    </tr> 
+                    filacounter = filacounter + row;
+                }
+                </tbody>
+            </table> 
+            cursocount++;
+            }
+        }
+        else
+        {
+            <h1 align="center">
+            No puede acceder a esta area
+        </h1>
+        }
+    }
+    catch(Exception)
+    {
+        <h1 align="center">
+            No puede acceder a esta area
+        </h1>
+    }
+    
+}else{
+    <h1 align="center">
+        Se requiere iniciar sesión
+    </h1>
+}
