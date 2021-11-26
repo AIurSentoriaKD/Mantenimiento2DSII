@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\Moon-\Desktop</_PublishTargetUrl>
+    <History>True|2021-11-26T06:23:41.2237156Z;True|2021-11-26T00:47:32.9227441-05:00;True|2021-11-26T00:34:25.9426700-05:00;True|2021-11-23T18:01:05.4672700-05:00;</History>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com%3b Port=3306%3b Database=bl98mfelycxs4dzk0klf%3b Uid=u6vdxycbnlct7yqo%3b Pwd=lfNWLoFJjgEPxoAz3Wtb</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="Mantenimiento2DSII.Data.ApplicationDbContext">
+      <Value>Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com%3b Port=3306%3b Database=bl98mfelycxs4dzk0klf%3b Uid=u6vdxycbnlct7yqo%3b Pwd=lfNWLoFJjgEPxoAz3Wtb</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

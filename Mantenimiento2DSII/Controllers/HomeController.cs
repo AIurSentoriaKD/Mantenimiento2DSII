@@ -23,31 +23,33 @@ namespace Mantenimiento2DSII.Controllers
 
         public IActionResult Index()
         {
-            List<User> users = new List<User>();
-            // Mysql connection strings
-            using (MySqlConnection con = new MySqlConnection("server=localhost;user=root;database=bdacademico;port=3305;password=Shirakami123"))
-            {
-                con.Open();
-                MySqlCommand cmd = new MySqlCommand("Select * from tusuario", con);
-                MySqlDataReader reader = cmd.ExecuteReader();
+            //List<User> users = new List<User>();
+            //// Mysql connection strings
+            //using (MySqlConnection con = new MySqlConnection("Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com; Port=3306; Database=bl98mfelycxs4dzk0klf; Uid=u6vdxycbnlct7yqo; Pwd=lfNWLoFJjgEPxoAz3Wtb"))
+            //{
+            //    con.Open();
+            //    MySqlCommand cmd = new MySqlCommand("Select * from tusuario", con);
+            //    MySqlDataReader reader = cmd.ExecuteReader();
 
 
-                while (reader.Read())
-                {
-                    User user = new User();
-                    user.Usuario = Convert.ToString(reader["Usuario"]);
-                    user.Contrasena = Convert.ToString(reader["constrasena"]);
+            //    while (reader.Read())
+            //    {
+            //        User user = new User();
+            //        user.Usuario = Convert.ToString(reader["Usuario"]);
+            //        user.Contrasena = Convert.ToString(reader["constrasena"]);
 
-                    users.Add(user);
-                }
-                reader.Close();
-            }
+            //        users.Add(user);
+            //    }
+            //    reader.Close();
 
-            return View(users);
+            //    con.Close();
+            //}
+
+            return View();
         }
 
         [HttpGet]
-        public IActionResult Docente()
+        public IActionResult Docente(string updatestatus = "default")
         {
             try
             {
@@ -56,7 +58,7 @@ namespace Mantenimiento2DSII.Controllers
                 Console.WriteLine(currentUserID);
 
                 List<AlumnoNotas> alnotas = new List<AlumnoNotas>();
-                using (MySqlConnection con = new MySqlConnection("server=localhost;user=root;database=bdacademico;port=3305;password=Shirakami123"))
+                using (MySqlConnection con = new MySqlConnection("Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com; Port=3306; Database=bl98mfelycxs4dzk0klf; Uid=u6vdxycbnlct7yqo; Pwd=lfNWLoFJjgEPxoAz3Wtb"))
                 {
                     con.Open();
                     MySqlCommand cmd = new MySqlCommand("select * from tdocente where usuario= '" + currentUserID + "'", con);
@@ -76,7 +78,7 @@ namespace Mantenimiento2DSII.Controllers
                         alumnonota.CodAsignatura = Convert.ToString(alumnonotas_reader["CodAsignatura"]);
                         alumnonota.Asignatura = Convert.ToString(alumnonotas_reader["Asignatura"]);
                         alumnonota.CodAlumno = Convert.ToString(alumnonotas_reader["CodAlumno"]);
-                        alumnonota.CodCarrera = Convert.ToString(alumnonotas_reader["CodCarrera"]);
+                        alumnonota.CodCarrera = Convert.ToString(alumnonotas_reader["codtnotas"]);
                         alumnonota.NombreAlumno = Convert.ToString(alumnonotas_reader["NombreAlumno"]);
                         alumnonota.Semestre = Convert.ToString(alumnonotas_reader["Semestre"]);
                         alumnonota.Parcial1 = Convert.ToString(alumnonotas_reader["Parcial1"]);
@@ -87,12 +89,14 @@ namespace Mantenimiento2DSII.Controllers
                     alumnonotas_reader.Close();
 
                
-                
+                    con.Close();
                 }
+                ViewBag.message = updatestatus;
                 return View(alnotas);
             }
             catch (Exception)
             {
+                ViewBag.message = updatestatus;
                 return View();
             }
 
@@ -101,8 +105,48 @@ namespace Mantenimiento2DSII.Controllers
         [HttpPost]
         public IActionResult Docente(string codalumno, string nota1, string nota2)
         {
-            Console.WriteLine("Actualizada nota de " + codalumno + ".");
-            return Docente();
+            Console.WriteLine("Actualizada nota de " + codalumno + "." + " Con notas: "+ nota1 + " "+ nota2);
+            try
+            {
+                ClaimsPrincipal currentUser = this.User;
+                var currentUserID = currentUser.FindFirst(ClaimTypes.Name).Value;
+                Console.WriteLine(currentUserID);
+
+                float nota1fl;
+                float nota2fl;
+                if(float.TryParse(nota1, out nota1fl) && float.TryParse(nota2, out nota2fl))
+                {
+                    float promed = (nota1fl + nota2fl) / 2;
+                    // ambos numeros pudieron convertirse a float actualizando ambas notas
+                    Console.WriteLine(promed);
+                    using (MySqlConnection con = new MySqlConnection("Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com; Port=3306; Database=bl98mfelycxs4dzk0klf; Uid=u6vdxycbnlct7yqo; Pwd=lfNWLoFJjgEPxoAz3Wtb"))
+                    {
+                        con.Open();
+                        // actualizando la nota del alumno con id con las indicadas
+
+                        MySqlCommand update2notas = new MySqlCommand("update tnotas set parcial1 = @parcial1, parcial2 = @parcial2, notafinal = @notafinal where codtnotas = @codalumno", con);
+                        update2notas.Parameters.AddWithValue("@parcial1", nota1fl);
+                        update2notas.Parameters.AddWithValue("@parcial2", nota2fl);
+                        update2notas.Parameters.AddWithValue("@notafinal", promed);
+                        update2notas.Parameters.AddWithValue("@codalumno", codalumno.ToString());
+                        update2notas.ExecuteNonQuery();
+                        update2notas.Dispose();
+
+                        con.Close();
+                    }
+                }   
+
+
+                
+                // si salió bien retorno la view con el mensaje correcto
+                return Docente("correcto");
+            }
+            catch (Exception)
+            {
+                // si algo salió mal envio el mensaje fallo
+                return Docente("error");
+            }
+            
             
         }
         
@@ -117,7 +161,7 @@ namespace Mantenimiento2DSII.Controllers
                 List<Alumno> alumnos = new List<Alumno>();
                 List<Notas> notas = new List<Notas>();
                 // Mysql connection strings
-                using (MySqlConnection con = new MySqlConnection("server=localhost;user=root;database=bdacademico;port=3305;password=Shirakami123"))
+                using (MySqlConnection con = new MySqlConnection("Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com; Port=3306; Database=bl98mfelycxs4dzk0klf; Uid=u6vdxycbnlct7yqo; Pwd=lfNWLoFJjgEPxoAz3Wtb"))
                 {
                     con.Open();
                     MySqlCommand cmd = new MySqlCommand("Select * from talumno where Usuario= '"+ currentUserID+"'", con);

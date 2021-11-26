@@ -5,127 +5,158 @@
 @{
     ViewData["Title"] = "Area del Docente";
 }
+
+@if(@ViewBag.message == "correcto")
+{
+    <div align="center">
+        <h3>Actualización de Notas realizada correctamente.</h3>
+    </div>
+
+}else if (@ViewBag.message == "error")
+{
+    <div align="center">
+        <h3>Hubo un error. Revise los campos o reinicie sesión.</h3>
+    </div>
+}
+
 @if(Model != null) {
     try{
-        if(Model[0].Asignatura != ""){
-        <h1 align="center">@ViewData["Title"]</h1>
+        if(Model[0].Asignatura != "")
+        {
+            <h1 align="center">@ViewData["Title"]</h1>
         
 
-        <!-- formulario -->
+            <!-- formulario -->
 
-        @using(Html.BeginForm()){
-          <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Codigo del alumno</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="inputEmail3" name="codalumno" placeholder="Codigo">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Nota Parcial 1</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="inputEmail3" name="nota1" placeholder="Parcial 1">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Nota Parcial 2</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="inputEmail3" ame="nota2" placeholder="Parcial 2">
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-10">
-              <button type="submit" class="btn btn-primary">Actualizar</button>
-            </div>
-          </div>
-        }
-
-        <!-- Fin formulario -->
-
-        var actualasign = Model[0].Asignatura;
-        int[] tabscount = new int[Model.Count];
-
-        var counter = 0;
-        var position = 0;
-        @foreach(var curso in Model)
-        {
-            if(curso.Asignatura == actualasign)
-            {
-                counter++;
-                tabscount[position] = counter;
+            @using(Html.BeginForm()){
+              <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Codigo de nota</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputEmail3" name="codalumno" placeholder="Codigo">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Nota Parcial 1</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputEmail3" name="nota1" placeholder="Parcial 1">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Nota Parcial 2</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputEmail3" name="nota2" placeholder="Parcial 2">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+              </div>
             }
-            else
+
+            <!-- Fin formulario -->
+
+            var actualasign = Model[0].Asignatura;
+
+            
+
+            int[] temporalarray = new int[10];
+
+            var counter = 0;
+            var position = 0;
+            @foreach(var curso in Model)
             {
-                actualasign = curso.Asignatura;
-                tabscount[position] = counter;
-                position++;
-                counter = 0;
-            }
-        
-        }
-        var filacounter = 0;
-        var cursocount = 0;
-        <h1 align="center">Asignaturas</h1>
-        @foreach(var pos in tabscount)
-        {
-            <h3>@Model[cursocount].Asignatura</h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>
-                            Codigo Carrera
-                        </th>
-                        <th>
-                            Codigo Alumno
-                        </th>
-                        <th>
-                            Nombres del Alumno
-                        </th>
-                        <th>
-                            Semestre
-                        </th>
-                        <th>
-                            Parcial 1
-                        </th>
-                        <th>
-                            Parcial 2
-                        </th>
-                        <th>
-                            Promedio Final
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(int row = 0; row < pos; row++)
+                if(curso.Asignatura == actualasign)
                 {
-                    <tr>
-                        <td>
-                            @Model[filacounter].CodCarrera
-                        </td>
-                        <td>
-                            @Model[filacounter].CodAlumno
-                        </td>
-                        <td>
-                            @Model[filacounter].NombreAlumno
-                        </td>
-                        <td>
-                            @Model[filacounter].Semestre
-                        </td>
-                        <td>
-                            @Model[filacounter].Parcial1
-                        </td>
-                        <td>
-                            @Model[filacounter].Parcial2
-                        </td>
-                        <td>
-                            @Model[filacounter].NotaFinal
-                        </td>
-                    </tr> 
-                    filacounter = filacounter + row;
+                    counter++;
+                    temporalarray[position] = counter;
                 }
-                </tbody>
-            </table> 
-            cursocount++;
+                else
+                {
+                    actualasign = curso.Asignatura;
+                    temporalarray[position] = counter;
+                    position++;
+                    counter = 0;
+                }
+        
             }
+            int[] tabscount = new int[position+1];
+
+            @for(var index = 0; index < temporalarray.Length; index++)
+            {
+                if (temporalarray[index] != 0)
+                {
+                    tabscount[index] = temporalarray[index];
+                }
+            }
+
+
+
+            var cursocount = 0;
+            <h1 align="center">Asignaturas</h1>
+            @for(int tableadasign = 0; tableadasign < tabscount.Length ;tableadasign++)
+            {
+                var pos = tabscount[tableadasign];
+                <h3>@cursocount  @Model[cursocount].Asignatura (@pos Alumnos)</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Codigo Nota
+                            </th>
+                            <th>
+                                Codigo Alumno
+                            </th>
+                            <th>
+                                Nombres del Alumno
+                            </th>
+                            <th>
+                                Semestre
+                            </th>
+                            <th>
+                                Parcial 1
+                            </th>
+                            <th>
+                                Parcial 2
+                            </th>
+                            <th>
+                                Promedio Final
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(int row = cursocount; row < pos; row++)
+                    {
+                        <tr>
+                            <td>
+                                @Model[row].CodCarrera
+                            </td>
+                            <td>
+                                @Model[row].CodAlumno
+                            </td>
+                            <td>
+                                @Model[row].NombreAlumno
+                            </td>
+                            <td>
+                                @Model[row].Semestre
+                            </td>
+                            <td>
+                                @Model[row].Parcial1
+                            </td>
+                            <td>
+                                @Model[row].Parcial2
+                            </td>
+                            <td>
+                                @Model[row].NotaFinal
+                            </td>
+                        </tr> 
+                    }
+                    </tbody>
+                </table>
+                cursocount++;
+            }
+
+            
         }
         else
         {
@@ -134,7 +165,7 @@
         </h1>
         }
     }
-    catch(Exception)
+    catch(Exception e)
     {
         <h1 align="center">
             No puede acceder a esta area

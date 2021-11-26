@@ -34,7 +34,7 @@ namespace Mantenimiento2DSII
         {
             services.AddDbContext<ApplicationDbContext>(
                 options => 
-                options.UseMySql("Server=localhost; Port=3305; Database=bdacademico; Uid=root; Pwd=Shirakami123", new MySqlServerVersion(new Version(8,0,11))));
+                options.UseMySql("Server=bl98mfelycxs4dzk0klf-mysql.services.clever-cloud.com; Port=3306; Database=bl98mfelycxs4dzk0klf; Uid=u6vdxycbnlct7yqo; Pwd=lfNWLoFJjgEPxoAz3Wtb", new MySqlServerVersion(new Version(8,0,11))));
 
             services.AddDefaultIdentity<IdentityUser>
                 (options => options.SignIn.RequireConfirmedAccount = true)
